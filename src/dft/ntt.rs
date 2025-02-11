@@ -43,12 +43,7 @@ impl<O> Table<O> {
 
 #[cfg(target_arch = "x86_64")]
 impl Table<u64> {
-    /// Creates a new NTT table using the reference 61-bit prime and root of unity.
-    /// 
-    /// Uses the following parameters:
-    /// - Q = 0x1fffffffffe00001 (61-bit prime)
-    /// - PSI = 0x15eb043c7aa2b01f (2^17-th root of unity)
-    /// - max_log_n = 17 (maximum transform size of 2^17)
+    /// NTT table using the reference 61-bit prime and root of unity.
     pub fn new() -> Self {
         const Q: u64 = 0x1fffffffffe00001;
         const PSI: u64 = 0x15eb043c7aa2b01f;
@@ -74,12 +69,7 @@ impl Table<u64> {
         }
     }
 
-    /// Creates a new NTT table with custom parameters.
-    /// 
-    /// # Arguments
-    /// * `q` - The prime modulus Q
-    /// * `psi` - A primitive 2N-th root of unity in Z_q
-    /// * `max_log_n` - Maximum transform size will be 2^max_log_n
+    /// NTT table with custom parameters.
     pub fn with_params(q: u64, psi: u64, max_log_n: usize) -> Self {
         let (forward_twiddles, inverse_twiddles) = Self::precompute_twiddles(q, psi, max_log_n);
         let inv_n_table = Self::precompute_inverses(q, max_log_n);
@@ -237,7 +227,6 @@ impl Table<u64> {
             }
         }
 
-        // Converts back from Montgomery form and ensure 64-bit output is properly reduced
         for (i, x) in a32.iter().enumerate() {
             let val = mont.from_montgomery(*x) as u64;
             a[i] = val % self.q;
@@ -310,14 +299,14 @@ impl Table<u64> {
             }
         }
 
-        // Applies inverse scaling in Montgomery form
+        // Inverse scaling in Montgomery form
         let inv_n = (self.inv_n_table[log_n] % self.q) as u32;
         let inv_n_mont = mont.to_montgomery(inv_n);
         for x in a32.iter_mut() {
             *x = mont.mul(*x, inv_n_mont);
         }
 
-        // Converts back to normal form with proper reduction
+        // Converting back to normal form with proper reduction
         for (i, x) in a32.iter().enumerate() {
             let val = mont.from_montgomery(*x) as u64;
             a[i] = val % self.q;
@@ -398,7 +387,7 @@ impl Table<u64> {
 
 }
 
-/// Trait for computing Discrete Fourier Transforms over finite fields.
+/// For computing Discrete Fourier Transforms over finite fields
 impl DFT<u64> for Table<u64> {
     fn forward_inplace(&self, a: &mut [u64]) {
         self.forward_inplace_core::<false>(a)
@@ -417,7 +406,7 @@ impl DFT<u64> for Table<u64> {
     }
 }
 
-// Montgomery arithmetic implementation for efficient modular operations
+// Montgomery arithmetic to make modular operations more efficient
 #[cfg(target_arch = "x86_64")]
 struct Montgomery32 {
     q: u32,
@@ -522,7 +511,7 @@ impl Montgomery32 {
     }
 }
 
-// HELPER FUNCTIONS
+// HELPERs
 #[inline]
 fn pow_mod(a: u64, mut exp: u64, modulus: u64) -> u64 {
     let mut result = 1u128;
