@@ -31,13 +31,12 @@ The implementation consists of:
 ```bash
 cargo test
 ```
-This will execute unit tests to verify the correctness of the implementation.
 
 **Run Benchmarks**:
 ```bash
 cargo bench
 ```
-This will run benchmarks to measure the performance of both the base and AVX2 implementations.
+Runs benchmarks to measure the performance of both the base and AVX2 implementations.
 
 ### Example
 
