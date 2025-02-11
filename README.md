@@ -46,16 +46,12 @@ To use the NTT in your own code:
 use ntt::Table;
 
 fn main() {
-    // Create a new NTT table with default parameters
     let ntt = Table::new();
     
-    // Input vector (must have length equal to a power of two)
     let mut data = vec![1, 2, 3, 4, 5, 6, 7, 8];
     
-    // Perform forward NTT
     ntt.forward_inplace(&mut data);
     
-    // Perform backward NTT
     ntt.backward_inplace(&mut data);
     
     println!("Transformed data: {:?}", data);
