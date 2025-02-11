@@ -38,7 +38,7 @@ cargo bench
 ```
 Runs benchmarks to measure the performance of both the base and AVX2 implementations.
 
-### Example
+### E.g.
 
 To use the NTT in your own code:
 
